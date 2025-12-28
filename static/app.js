@@ -13,6 +13,7 @@ const attemptsCount = document.getElementById("attempts-count");
 const hintArea = document.getElementById("hint-area");
 const messageDiv = document.getElementById("message");
 const winAttempts = document.getElementById("win-attempts");
+const winSecret = document.getElementById("win-secret");
 
 // API base URL
 const API_BASE = "";
@@ -114,6 +115,7 @@ function updateUI(state) {
     }
   } else if (state.status === "won") {
     // Game won!
+    winSecret.textContent = state.secret;
     winAttempts.textContent = state.attempts;
     welcomeScreen.style.display = "none";
     gameScreen.style.display = "none";

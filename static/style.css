@@ -177,6 +177,29 @@ h1 {
   padding: 20px;
 }
 
+.winning-number {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.winning-number .label {
+  display: block;
+  font-size: 0.9em;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.secret-number {
+  display: block;
+  font-size: 3em;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .win-message h2 {
   color: #28a745;
   margin-bottom: 15px;

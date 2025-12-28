@@ -34,7 +34,8 @@ instance ToJSON GameState where
   toJSON (Won s a) =
     object
       [ "status" .= ("won" :: Text),
-        "attempts" .= a
+        "attempts" .= a,
+        "secret" .= s
       ]
 
 -- Request types
