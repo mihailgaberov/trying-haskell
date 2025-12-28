@@ -54,6 +54,11 @@ newGameId = T.pack . show <$> nextRandom
 -- API routes
 app :: GameStore -> ScottyM ()
 app store = do
+  -- Serve static files
+  get "/" $ file "static/index.html"
+  get "/style.css" $ file "static/style.css"
+  get "/app.js" $ file "static/app.js"
+
   -- Start a new game
   post "/api/start" $ do
     secret <- liftIO $ randomRIO (1, 100)
