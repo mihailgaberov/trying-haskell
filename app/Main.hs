@@ -22,14 +22,36 @@ applyEvent (Playing secret attempts) (Guess n)
 -- Ignore invalid events (no state change)
 applyEvent state _ = state
 
-main :: IO ()
-main = do
-  let s0 = NotStarted
-  let s1 = applyEvent s0 (StartGame 42)
-  let s2 = applyEvent s1 (Guess 10)
-  let s3 = applyEvent s2 (Guess 42)
+render :: GameState -> IO ()
+render NotStarted =
+  putStrLn "Welcome! Type 'start' to begin."
+render (Playing _ attempts) =
+  putStrLn ("Make a guess! Attempts so far: " ++ show attempts)
+render (Won _ attempts) =
+  putStrLn ("You won in " ++ show attempts ++ " attempts!")
 
-  print s0
-  print s1
-  print s2
-  print s3
+readEvent :: GameState -> IO GameEvent
+readEvent NotStarted = do
+  _ <- getLine
+  -- for now, fixed secret (we’ll improve this later)
+  pure (StartGame 42)
+readEvent (Playing _ _) = do
+  input <- getLine
+  pure (Guess (read input))
+readEvent (Won _ _) =
+  -- no more events once won
+  pure (Guess 0)
+
+gameLoop :: GameState -> IO ()
+gameLoop state = do
+  render state
+  case state of
+    Won _ _ -> pure ()
+    _ -> do
+      event <- readEvent state
+      let nextState = applyEvent state event
+      gameLoop nextState
+
+main :: IO ()
+main =
+  gameLoop NotStarted
