@@ -61,7 +61,7 @@ executable trying-haskell
     main-is:          Main.hs
 
     -- Modules included in this executable, other than Main.
-    -- other-modules:
+    other-modules:       Game
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
@@ -72,6 +72,7 @@ executable trying-haskell
 
     -- Directories containing source files.
     hs-source-dirs:   app
+                   , src
 
     -- Base language which the package is written in.
     default-language: GHC2024
