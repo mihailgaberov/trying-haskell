@@ -58,7 +58,9 @@ app :: GameStore -> ScottyM ()
 app store = do
   -- Serve static files
   get "/" $ file "static/index.html"
-  get "/style.css" $ file "static/style.css"
+  get "/style.css" $ do
+    setHeader "Content-Type" "text/css"
+    file "static/style.css"
   get "/app.js" $ file "static/app.js"
 
   -- Start a new game
