@@ -1,0 +1,49 @@
+# Cabal build artifacts
+dist-newstyle/
+dist/
+cabal.project.local
+cabal.project.local~
+*.cabal~
+.cabal-sandbox/
+cabal.sandbox.config
+
+# GHC build artifacts
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+*.p_hi
+*.p_o
+*.hi-boot
+*.o-boot
+
+# GHC environment files
+.ghc.environment.*
+
+# Stack build artifacts (if using Stack)
+.stack-work/
+*.stack-work
+
+# Profiling
+*.prof
+*.ps
+*.hp
+*.aux
+*.tix
+.hpc/
+
+# Haddock documentation
+dist/doc/
+
+# IDE files
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
