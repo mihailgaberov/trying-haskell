@@ -13,6 +13,7 @@ import Data.UUID
 import Data.UUID.V4
 import Game
 import Network.HTTP.Types.Status (status404)
+import System.Environment (lookupEnv)
 import System.Random (randomRIO)
 import Web.Scotty
 
@@ -108,6 +109,11 @@ app store = do
 
 main :: IO ()
 main = do
-  putStrLn "Starting web server on http://localhost:3000"
+  -- Get port from environment variable or default to 3000
+  portEnv <- lookupEnv "PORT"
+  let port = case portEnv of
+        Just p -> read p
+        Nothing -> 3000
+  putStrLn $ "Starting web server on port " ++ show port
   store <- newMVar Map.empty
-  scotty 3000 $ app store
+  scotty port $ app store
