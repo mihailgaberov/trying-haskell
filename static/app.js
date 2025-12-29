@@ -14,6 +14,7 @@ const hintArea = document.getElementById("hint-area");
 const messageDiv = document.getElementById("message");
 const winAttempts = document.getElementById("win-attempts");
 const winSecret = document.getElementById("win-secret");
+const resetLink = document.getElementById("reset-link");
 
 // API base URL
 const API_BASE = "";
@@ -156,6 +157,10 @@ function clearMessage() {
 startBtn.addEventListener("click", startGame);
 guessBtn.addEventListener("click", makeGuess);
 playAgainBtn.addEventListener("click", resetGame);
+resetLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  resetGame();
+});
 
 // Allow Enter key to submit guess
 guessInput.addEventListener("keypress", (e) => {
