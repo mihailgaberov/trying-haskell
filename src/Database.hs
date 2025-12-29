@@ -61,14 +61,14 @@ addEntry name attempts secret = do
     (name, attempts, secret, timestamp)
   close conn
 
--- Get top N entries, sorted by attempts (ascending), then by timestamp (ascending)
+-- Get top N entries, sorted by attempts (ascending), then by timestamp (descending - most recent first)
 getTopEntries :: Int -> IO [LeaderboardEntry]
 getTopEntries limit = do
   conn <- open dbPath
   entries <-
     query
       conn
-      (Query $ T.pack "SELECT id, name, attempts, secret, timestamp FROM leaderboard ORDER BY attempts ASC, timestamp ASC LIMIT ?")
+      (Query $ T.pack "SELECT id, name, attempts, secret, timestamp FROM leaderboard ORDER BY attempts ASC, timestamp DESC LIMIT ?")
       (Only limit)
   close conn
   return entries
