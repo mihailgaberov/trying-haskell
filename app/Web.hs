@@ -11,8 +11,9 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import Data.UUID
 import Data.UUID.V4
+import Database
 import Game
-import Network.HTTP.Types.Status (status404)
+import Network.HTTP.Types.Status (status400, status404)
 import System.Environment (lookupEnv)
 import System.Random (randomRIO)
 import Web.Scotty
@@ -48,6 +49,38 @@ data GuessRequest = GuessRequest
 instance FromJSON GuessRequest where
   parseJSON = withObject "GuessRequest" $ \o ->
     GuessRequest <$> o .: "gameId" <*> o .: "guess"
+
+-- JSON instance for LeaderboardEntry
+instance ToJSON LeaderboardEntry where
+  toJSON entry =
+    object
+      [ "id" .= entryId entry,
+        "name" .= entryName entry,
+        "attempts" .= entryAttempts entry,
+        "secret" .= entrySecret entry,
+        "timestamp" .= entryTimestamp entry
+      ]
+
+-- Request type for submitting leaderboard entry
+data LeaderboardRequest = LeaderboardRequest
+  { leaderboardName :: Text,
+    leaderboardAttempts :: Int,
+    leaderboardSecret :: Int
+  }
+  deriving (Show)
+
+instance FromJSON LeaderboardRequest where
+  parseJSON = withObject "LeaderboardRequest" $ \o ->
+    LeaderboardRequest <$> o .: "name" <*> o .: "attempts" <*> o .: "secret"
+
+-- Sanitize and validate name (max 10 chars, alphanumeric + spaces)
+sanitizeName :: Text -> Maybe Text
+sanitizeName name =
+  let trimmed = T.strip name
+      sanitized = T.take 10 $ T.filter (\c -> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == ' ') trimmed
+   in if T.null sanitized || T.length sanitized < 1
+        then Nothing
+        else Just sanitized
 
 -- Helper to generate a new game ID using UUID
 newGameId :: IO GameId
@@ -106,12 +139,32 @@ app store = do
         json $ object ["error" .= ("Game not found" :: Text)]
       Just state -> json $ object ["state" .= state]
 
+  -- Submit leaderboard entry
+  post "/api/leaderboard" $ do
+    req <- jsonData
+    case sanitizeName (leaderboardName req) of
+      Nothing -> do
+        status status400
+        json $ object ["error" .= ("Invalid name. Must be 1-10 alphanumeric characters." :: Text)]
+      Just sanitizedName -> do
+        liftIO $ addEntry sanitizedName (leaderboardAttempts req) (leaderboardSecret req)
+        json $ object ["status" .= ("ok" :: Text)]
+
+  -- Get leaderboard (top 10)
+  get "/api/leaderboard" $ do
+    entries <- liftIO $ getTopEntries 10
+    json $ object ["entries" .= entries]
+
   -- Health check endpoint
   get "/health" $ do
     json $ object ["status" .= ("ok" :: Text)]
 
 main :: IO ()
 main = do
+  -- Initialize database
+  initDatabase
+  putStrLn "Database initialized"
+  
   -- Get port from environment variable or default to 3000
   portEnv <- lookupEnv "PORT"
   let port = case portEnv of

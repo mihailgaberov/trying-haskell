@@ -14,6 +14,7 @@
     <div id="game-area">
       <div id="welcome-screen">
         <button id="start-btn" class="btn btn-primary">Start New Game</button>
+        <button id="leaderboard-btn" class="btn btn-secondary">Leaderboards</button>
       </div>
       
       <div id="game-screen" style="display: none;">
@@ -54,6 +55,48 @@
           <h2>🎉 Congratulations!</h2>
           <p>You won in <span id="win-attempts">0</span> attempts!</p>
           <button id="play-again-btn" class="btn btn-primary">Play Again</button>
+        </div>
+      </div>
+      
+      <!-- Name input modal -->
+      <div id="name-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <h3>Enter Your Name</h3>
+          <p class="modal-subtitle">Add your name to the leaderboard!</p>
+          <input 
+            type="text" 
+            id="name-input" 
+            maxlength="10" 
+            placeholder="Your name (max 10 chars)"
+            autofocus
+          >
+          <div class="modal-buttons">
+            <button id="submit-name-btn" class="btn btn-primary">Submit</button>
+            <button id="skip-name-btn" class="btn btn-secondary">Skip</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Leaderboard screen -->
+      <div id="leaderboard-screen" style="display: none;">
+        <div class="leaderboard-content">
+          <h2>🏆 Leaderboard</h2>
+          <div id="leaderboard-table-container">
+            <table id="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Name</th>
+                  <th>Attempts</th>
+                  <th>Winning Number</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <!-- Entries will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+          <button id="back-to-game-btn" class="btn btn-primary">Back to Game</button>
         </div>
       </div>
     </div>
