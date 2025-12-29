@@ -47,3 +47,7 @@ dist/doc/
 *.bak
 *.log
 
+# Database files
+*.db
+leaderboard.db
+
